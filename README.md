@@ -363,47 +363,183 @@ Each experiment generates:
 
 ## Implementation Details
 
-### Manual NumPy Implementation
+### Mathematical Foundation
 
-**Key Features**:
-- Pure NumPy implementation (no scikit-learn)
-- Log probabilities for numerical stability
-- Epsilon smoothing to prevent zero variance
-- Vectorized operations for efficiency
+#### Bayes' Theorem
 
-**Algorithm** ([naive_bayes_manual.py:44](src/naive_bayes_manual.py#L44)):
-```python
-# Training (fit method)
-for each class:
-    prior[class] = count(class) / total_samples
-    mean[class] = average(features for this class)
-    variance[class] = variance(features) + epsilon
+The core principle behind Naive Bayes classification is Bayes' theorem:
 
-# Prediction (predict method)
-for each sample:
-    for each class:
-        log_likelihood = sum of log(Gaussian PDF)
-        log_posterior = log_likelihood + log(prior)
-    prediction = class with max log_posterior
 ```
+P(C|X) = P(X|C) × P(C) / P(X)
+```
+
+Where:
+- **P(C|X)**: Posterior probability - probability of class C given features X
+- **P(X|C)**: Likelihood - probability of observing features X given class C
+- **P(C)**: Prior probability - probability of class C occurring
+- **P(X)**: Evidence - probability of observing features X (constant for all classes)
+
+Since P(X) is constant across all classes, we can simplify to:
+
+```
+P(C|X) ∝ P(X|C) × P(C)
+```
+
+#### Naive Independence Assumption
+
+For features X = [x₁, x₂, ..., xₙ], we assume conditional independence:
+
+```
+P(X|C) = P(x₁|C) × P(x₂|C) × ... × P(xₙ|C) = ∏ᵢ P(xᵢ|C)
+```
+
+This "naive" assumption simplifies computation dramatically and works surprisingly well in practice.
+
+#### Gaussian Distribution for Continuous Features
+
+For each feature xᵢ in class C, we assume a Gaussian (normal) distribution:
+
+```
+P(xᵢ|C) = (1 / √(2πσ²ᵢc)) × exp(-(xᵢ - μᵢc)² / (2σ²ᵢc))
+```
+
+Where:
+- **μᵢc**: Mean of feature i for class C
+- **σ²ᵢc**: Variance of feature i for class C
+
+#### Log-Space Computation for Numerical Stability
+
+To prevent underflow from multiplying many small probabilities, we use logarithms:
+
+```
+log P(C|X) = log P(C) + Σᵢ log P(xᵢ|C)
+
+log P(xᵢ|C) = -0.5 × [log(2πσ²ᵢc) + (xᵢ - μᵢc)² / σ²ᵢc]
+```
+
+### Algorithmic Implementation
+
+#### Training Algorithm (Learning Phase)
+
+**Input**: Training data X (n_samples × n_features), labels y (n_samples)
+
+**Output**: Learned parameters (class_prior, theta, var)
+
+**Algorithm**:
+```
+1. Extract unique classes: classes = unique(y)
+2. Initialize parameter arrays:
+   - class_prior: array of size n_classes
+   - theta (means): array of size (n_classes × n_features)
+   - var (variances): array of size (n_classes × n_features)
+
+3. For each class C in classes:
+   a. Select samples: X_c = X[y == C]
+   b. Calculate prior: P(C) = |X_c| / |X|
+   c. Calculate means: μᵢc = mean(X_c[:, i]) for each feature i
+   d. Calculate variances: σ²ᵢc = var(X_c[:, i]) + ε for each feature i
+      (ε = 1e-9 for numerical stability, prevents division by zero)
+
+4. Return (class_prior, theta, var)
+```
+
+**Computational Complexity**: O(n_samples × n_features × n_classes)
+
+**Implementation** ([naive_bayes_manual.py:24-72](src/naive_bayes_manual.py#L24)):
+```python
+def fit(self, X, y):
+    self.classes_ = np.unique(y)
+    self.n_classes_ = len(self.classes_)
+    self.n_features_ = X.shape[1]
+
+    self.class_prior_ = np.zeros(self.n_classes_)
+    self.theta_ = np.zeros((self.n_classes_, self.n_features_))
+    self.var_ = np.zeros((self.n_classes_, self.n_features_))
+
+    for idx, class_label in enumerate(self.classes_):
+        X_class = X[y == class_label]
+        self.class_prior_[idx] = X_class.shape[0] / X.shape[0]
+        self.theta_[idx] = np.mean(X_class, axis=0)
+        self.var_[idx] = np.var(X_class, axis=0) + self.epsilon
+
+    return self
+```
+
+#### Prediction Algorithm (Inference Phase)
+
+**Input**: Test data X_test (n_test × n_features), learned parameters
+
+**Output**: Predicted class labels y_pred (n_test)
+
+**Algorithm**:
+```
+1. For each test sample x in X_test:
+
+   2. For each class C:
+      a. Initialize: log_posterior_C = log(P(C))
+
+      b. For each feature i:
+         - Calculate: log_likelihood_i = -0.5 × [log(2π × σ²ᵢc) + (xᵢ - μᵢc)² / σ²ᵢc]
+         - Add to posterior: log_posterior_C += log_likelihood_i
+
+      c. Store: log_posteriors[C] = log_posterior_C
+
+   3. Predict: y_pred[x] = argmax_C(log_posteriors)
+
+4. Return y_pred
+```
+
+**Computational Complexity**: O(n_test × n_features × n_classes)
+
+**Implementation** ([naive_bayes_manual.py:74-142](src/naive_bayes_manual.py#L74)):
+```python
+def _calculate_log_likelihood(self, X):
+    n_samples = X.shape[0]
+    log_likelihood = np.zeros((n_samples, self.n_classes_))
+
+    for idx in range(self.n_classes_):
+        mean = self.theta_[idx]
+        var = self.var_[idx]
+
+        # Gaussian PDF in log space
+        log_2pi_var = np.log(2 * np.pi * var)
+        squared_diff = ((X - mean) ** 2) / var
+        log_likelihood[:, idx] = -0.5 * np.sum(log_2pi_var + squared_diff, axis=1)
+
+    return log_likelihood
+
+def predict(self, X):
+    log_posterior = self.predict_log_proba(X)
+    class_indices = np.argmax(log_posterior, axis=1)
+    return self.classes_[class_indices]
+```
+
+### Numerical Stability Techniques
+
+1. **Log-Space Computation**: Prevents underflow when multiplying many probabilities
+2. **Epsilon Smoothing**: Adds 1e-9 to variance to prevent division by zero
+3. **Vectorized Operations**: Uses NumPy broadcasting for efficient computation
 
 ### Scikit-learn Wrapper
 
 Thin wrapper around `sklearn.naive_bayes.GaussianNB` providing consistent interface with manual implementation for fair comparison.
 
+**Key Configuration**:
+- `var_smoothing=1e-9`: Matches epsilon in manual implementation
+
 ### Data Management
 
 - **Validation**: Checks for missing values, duplicates, class balance
 - **Stratified splitting**: Maintains class proportions in train/test sets
-- **Optional normalization**: Z-score standardization
+- **Optional normalization**: Z-score standardization: z = (x - μ) / σ
 
 ### Evaluation Metrics
 
-- **Accuracy**: Overall correctness
-- **Precision**: True positives / (true positives + false positives)
-- **Recall**: True positives / (true positives + false negatives)
-- **F1-score**: Harmonic mean of precision and recall
-- **Confusion Matrix**: Detailed breakdown of predictions
+- **Accuracy**: (TP + TN) / Total = Overall correctness
+- **Precision**: TP / (TP + FP) = How many predicted positives are correct
+- **Recall**: TP / (TP + FN) = How many actual positives are found
+- **F1-score**: 2 × (Precision × Recall) / (Precision + Recall) = Harmonic mean
+- **Confusion Matrix**: Grid showing predicted vs actual classifications
 
 ### Ring Buffer Logging
 
@@ -429,6 +565,70 @@ Custom logging system that:
 **Total**: 150 samples, perfectly balanced
 
 **Source**: Fisher, R.A. (1936). "The use of multiple measurements in taxonomic problems"
+
+## Key Takeaways: Real-World Applications
+
+Naive Bayes algorithms are widely used across industries due to their simplicity, speed, and effectiveness. Here are 10 practical applications:
+
+### 1. Email Spam Filtering (Technology)
+**Industry**: Email Services, Cybersecurity
+**Implementation**: Analyze email content (subject, body, sender) to classify as spam or legitimate. Train on word frequencies and metadata to identify suspicious patterns.
+**Benefits**: Fast real-time classification, low computational overhead, adaptive to new spam patterns through continuous retraining.
+
+### 2. Sentiment Analysis (Social Media & Marketing)
+**Industry**: Social Media Platforms, Market Research, Brand Management
+**Implementation**: Classify customer reviews, tweets, and comments as positive, negative, or neutral based on word frequencies and sentiment indicators.
+**Benefits**: Quick sentiment scoring of large volumes of text, helps companies respond to customer feedback, tracks brand reputation in real-time.
+
+### 3. Medical Diagnosis Support (Healthcare)
+**Industry**: Healthcare, Clinical Decision Support Systems
+**Implementation**: Classify patient symptoms and test results to suggest potential diagnoses. Features include vital signs, lab values, patient history, and reported symptoms.
+**Benefits**: Fast preliminary screening tool, helps prioritize urgent cases, reduces diagnostic time for common conditions while maintaining transparency for medical review.
+
+### 4. Credit Risk Assessment (Finance)
+**Industry**: Banking, Lending, Credit Card Companies
+**Implementation**: Classify loan applicants as low-risk or high-risk based on credit history, income, employment status, debt-to-income ratio, and payment patterns.
+**Benefits**: Fast automated approval for low-risk applications, scalable to millions of applications, interpretable risk factors for regulatory compliance.
+
+### 5. Document Classification (Enterprise)
+**Industry**: Legal, Government, Corporate Document Management
+**Implementation**: Automatically categorize documents into topics (contracts, invoices, reports, correspondence) based on text content and metadata.
+**Benefits**: Automates document routing, enables efficient search and retrieval, reduces manual sorting time by 80-90%, scales to millions of documents.
+
+### 6. Weather Prediction (Meteorology)
+**Industry**: Weather Services, Agriculture, Aviation
+**Implementation**: Classify weather conditions (sunny, rainy, cloudy) based on atmospheric features like temperature, humidity, pressure, wind speed, and historical patterns.
+**Benefits**: Fast short-term forecasts, simple model interpretable by meteorologists, computationally cheap for embedded weather stations.
+
+### 7. Customer Churn Prediction (Telecommunications)
+**Industry**: Telecom, SaaS, Subscription Services
+**Implementation**: Classify customers as likely to churn or retain based on usage patterns, customer service interactions, payment history, and engagement metrics.
+**Benefits**: Early identification of at-risk customers, enables targeted retention campaigns, minimal latency for real-time scoring during customer calls.
+
+### 8. Fake News Detection (Media & Journalism)
+**Industry**: Social Media, News Aggregators, Content Moderation
+**Implementation**: Classify articles as credible or suspicious based on linguistic features, source reputation, claim patterns, and cross-reference with fact-checking databases.
+**Benefits**: Fast preliminary screening of viral content, scalable to high-volume newsfeeds, helps prioritize manual fact-checking efforts.
+
+### 9. Intrusion Detection Systems (Cybersecurity)
+**Industry**: Network Security, Cloud Services, Enterprise IT
+**Implementation**: Classify network traffic as normal or anomalous based on packet features, connection patterns, protocol usage, and behavioral signatures.
+**Benefits**: Real-time threat detection with minimal latency, low computational overhead for high-throughput networks, adaptive to new attack patterns.
+
+### 10. Recommendation Systems (E-commerce & Streaming)
+**Industry**: Online Retail, Video Streaming, Music Platforms
+**Implementation**: Classify user preferences and predict product/content categories of interest based on browsing history, purchase patterns, ratings, and demographic features.
+**Benefits**: Fast personalized recommendations, handles cold-start problems with demographic priors, computationally efficient for millions of users.
+
+### Why Naive Bayes Works So Well
+
+Despite its "naive" independence assumption, Naive Bayes excels because:
+- **Speed**: Trains and predicts in milliseconds, even on large datasets
+- **Simplicity**: Easy to understand, implement, and explain to stakeholders
+- **Data Efficiency**: Works well even with limited training data
+- **Scalability**: Handles high-dimensional feature spaces effectively
+- **Interpretability**: Learned parameters (priors, means, variances) are transparent
+- **Real-time Ready**: Low latency makes it perfect for online applications
 
 ## Technical Requirements
 
@@ -474,10 +674,81 @@ Custom logging system that:
 - Fisher, R.A. (1936). "The use of multiple measurements in taxonomic problems"
 - PROJECT_GUIDELINES.md for code standards
 
+## Code Files Summary
+
+This project consists of 12 Python files totaling 1,183 lines of code, organized by functional category:
+
+### Main Application Layer
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| [main.py](main.py) | 103 | Main orchestration script - loads config, runs experiments, generates results |
+
+### Core Model Implementations
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| [src/naive_bayes_manual.py](src/naive_bayes_manual.py) | 142 | Manual Gaussian Naive Bayes implementation using NumPy from scratch |
+| [src/naive_bayes_sklearn.py](src/naive_bayes_sklearn.py) | 133 | Scikit-learn wrapper for comparison with identical interface |
+
+### Data Pipeline
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| [src/data_loader.py](src/data_loader.py) | 132 | Iris dataset loading, validation, stratified splitting, normalization |
+
+### Evaluation & Visualization
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| [src/evaluator.py](src/evaluator.py) | 105 | Metrics calculation, parameter comparison, runtime benchmarking |
+| [src/visualizer.py](src/visualizer.py) | 125 | Generates 6 visualizations per experiment at 300 DPI |
+
+### Utility Modules
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| [src/utils/paths.py](src/utils/paths.py) | 95 | Centralized path management with singleton pattern |
+| [src/utils/validators.py](src/utils/validators.py) | 150 | Input validation for arrays, dataframes, train-test splits |
+| [src/utils/helpers.py](src/utils/helpers.py) | 128 | General utilities: config loading, normalization, benchmarking |
+| [src/utils/logger.py](src/utils/logger.py) | 148 | Ring buffer logging with line and file limits |
+
+### Module Initialization
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| [src/__init__.py](src/__init__.py) | 16 | Package initialization and public API exports |
+| [src/utils/__init__.py](src/utils/__init__.py) | 9 | Utils subpackage initialization |
+
+### Compliance Metrics
+
+- **Total Python Files**: 12
+- **Total Lines of Code**: 1,183
+- **Average Lines per File**: 99
+- **Maximum File Length**: 150 lines (validators.py)
+- **Minimum File Length**: 9 lines (utils/__init__.py)
+- **PROJECT_GUIDELINES Compliance**: ✅ 100% (all files ≤150 lines)
+
+### Architecture Highlights
+
+**Modular Design**: Clear separation between data loading, model implementations, evaluation, and utilities
+
+**Single Responsibility**: Each module has a focused purpose - data_loader handles data, evaluator handles metrics, visualizer handles plots
+
+**Reusability**: Utility modules (paths, validators, helpers, logger) provide reusable components across the project
+
+**Type Safety**: All functions include type hints for better IDE support and error detection
+
+**Testing Ready**: Modular structure enables easy unit testing of individual components
+
 ## License
 
 Educational project - free to use and modify.
 
 ## Author
 
-L21 Project - December 2025
+**Author:** Hadar Wayn
+**Project:** L21 - Iris Classification using Naive Bayes: Comparative Implementation Study
+**Date:** December 2025
+**Technical Implementation:** Claude Code (Claude Sonnet 4.5)
+**Repository:** [github.com/hadarwayn/L21-Iris_Classification_using_Naive_Bayes-Comparative_Implementation_Study](https://github.com/hadarwayn/L21-Iris_Classification_using_Naive_Bayes-Comparative_Implementation_Study)
