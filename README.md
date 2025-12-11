@@ -748,7 +748,11 @@ Educational project - free to use and modify.
 ## Author
 
 **Author:** Hadar Wayn
+
 **Project:** L21 - Iris Classification using Naive Bayes: Comparative Implementation Study
+
 **Date:** December 2025
+
 **Technical Implementation:** Claude Code (Claude Sonnet 4.5)
+
 **Repository:** [github.com/hadarwayn/L21-Iris_Classification_using_Naive_Bayes-Comparative_Implementation_Study](https://github.com/hadarwayn/L21-Iris_Classification_using_Naive_Bayes-Comparative_Implementation_Study)
