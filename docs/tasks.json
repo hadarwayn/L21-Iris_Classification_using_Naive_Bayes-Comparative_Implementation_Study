@@ -1,0 +1,1315 @@
+{
+  "project_metadata": {
+    "project_name": "L21 - Iris Classification using Naive Bayes: Comparative Implementation Study",
+    "version": "1.0",
+    "status": "planning",
+    "start_date": "2025-12-10",
+    "estimated_total_hours": 18.5,
+    "python_version": "3.10+",
+    "primary_developer": "Student",
+    "reviewer": "Course Instructor"
+  },
+  "phases": [
+    {
+      "phase_id": "phase_1",
+      "phase_name": "Planning and Documentation (PHASE 1 - MUST COMPLETE BEFORE CODING)",
+      "description": "Create PRD and tasks.json, obtain approval before any implementation",
+      "duration_hours": 3.0,
+      "status": "in_progress",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "1.1",
+          "name": "Review Course Materials and Guidelines",
+          "description": "Read Bayes/Naive Bayes PDFs, PROJECT_GUIDELINES.md, examine Iris.csv structure, understand mathematical foundations",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "completed",
+          "dependencies": [],
+          "deliverables": [
+            "Understanding of Bayes' theorem",
+            "Understanding of Gaussian distribution",
+            "Understanding of PROJECT_GUIDELINES requirements",
+            "Notes on Iris dataset structure"
+          ],
+          "acceptance_criteria": [
+            "Can explain Bayes' theorem in own words",
+            "Understands Gaussian PDF formula",
+            "Knows all PROJECT_GUIDELINES constraints (150 lines, UV, etc.)",
+            "Verified Iris.csv has 150 samples, 4 features, 3 classes"
+          ]
+        },
+        {
+          "task_id": "1.2",
+          "name": "Create Comprehensive PRD.md",
+          "description": "Write complete Product Requirements Document with all required sections: overview, users, requirements, technical specs, success criteria, learning objectives, math foundations",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 2.0,
+          "status": "in_progress",
+          "dependencies": ["1.1"],
+          "deliverables": ["docs/PRD.md"],
+          "acceptance_criteria": [
+            "All 13 main sections present",
+            "Executive summary clear and compelling",
+            "Target users and use cases detailed",
+            "Functional requirements with acceptance criteria",
+            "Technical requirements with exact versions",
+            "Success criteria measurable and specific",
+            "Mathematical foundations explained for 15-year-olds",
+            "Implementation comparison strategy defined",
+            "Risk management section complete"
+          ],
+          "files_to_create": ["docs/PRD.md"]
+        },
+        {
+          "task_id": "1.3",
+          "name": "Create Detailed tasks.json",
+          "description": "Define complete implementation plan with phases, tasks, dependencies, hours, deliverables following PROJECT_GUIDELINES structure",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["1.2"],
+          "deliverables": ["docs/tasks.json"],
+          "acceptance_criteria": [
+            "All implementation phases defined (7 phases)",
+            "Each task has: id, name, description, priority, hours, dependencies",
+            "File structure section matches PRD",
+            "Total estimated hours calculated",
+            "Dependencies form valid DAG (no cycles)",
+            "All deliverables listed"
+          ],
+          "files_to_create": ["docs/tasks.json"]
+        },
+        {
+          "task_id": "1.4",
+          "name": "Obtain PRD and Tasks Approval",
+          "description": "⚠️ MANDATORY APPROVAL GATE - Submit PRD.md and tasks.json for review, obtain explicit approval before proceeding to Phase 2",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0,
+          "status": "pending",
+          "dependencies": ["1.2", "1.3"],
+          "deliverables": ["Approval confirmation"],
+          "acceptance_criteria": [
+            "PRD reviewed by instructor/reviewer",
+            "tasks.json reviewed and approved",
+            "Explicit approval received (written/verbal)",
+            "Any requested changes incorporated",
+            "Ready to proceed to implementation"
+          ],
+          "blocking": true,
+          "notes": "⚠️ DO NOT PROCEED TO PHASE 2 WITHOUT APPROVAL ⚠️"
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_2",
+      "phase_name": "Environment Setup and Project Structure",
+      "description": "Set up development environment, create directory structure, configure UV venv, initialize logging",
+      "duration_hours": 2.0,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "requires_approval_from": ["phase_1"],
+      "tasks": [
+        {
+          "task_id": "2.1",
+          "name": "Create Project Directory Structure",
+          "description": "Create all required directories and placeholder files following PROJECT_GUIDELINES structure",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["1.4"],
+          "deliverables": [
+            "Root: README.md, main.py, requirements.txt, .gitignore",
+            "venv/.gitkeep",
+            "src/ with __init__.py",
+            "src/utils/ with __init__.py",
+            "docs/ folder",
+            "data/ folder",
+            "results/ with subfolders",
+            "logs/ with config/",
+            "config/ with experiments/",
+            "tests/ with __init__.py"
+          ],
+          "files_to_create": [
+            "README.md",
+            "main.py",
+            "requirements.txt",
+            ".gitignore",
+            ".env.example",
+            "venv/.gitkeep",
+            "src/__init__.py",
+            "src/naive_bayes_manual.py",
+            "src/naive_bayes_sklearn.py",
+            "src/data_loader.py",
+            "src/evaluator.py",
+            "src/visualizer.py",
+            "src/utils/__init__.py",
+            "src/utils/logger.py",
+            "src/utils/validators.py",
+            "src/utils/helpers.py",
+            "src/utils/paths.py",
+            "data/README.md",
+            "results/.gitkeep",
+            "results/examples/.gitkeep",
+            "results/graphs/.gitkeep",
+            "results/tables/.gitkeep",
+            "logs/.gitkeep",
+            "logs/config/log_config.json",
+            "config/settings.yaml",
+            "config/experiments/baseline.yaml",
+            "config/experiments/different_split.yaml",
+            "config/experiments/with_scaling.yaml",
+            "tests/__init__.py"
+          ],
+          "acceptance_criteria": [
+            "All directories created",
+            "All __init__.py files in place",
+            "venv/.gitkeep has setup instructions",
+            ".gitignore properly configured",
+            "Directory structure matches PRD section 5.4"
+          ]
+        },
+        {
+          "task_id": "2.2",
+          "name": "Install UV and Create Virtual Environment",
+          "description": "Install UV package manager, create .venv, verify UV commands work in both WSL and PowerShell",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["2.1"],
+          "deliverables": [
+            "UV installed",
+            ".venv/ directory created",
+            "UV commands documented"
+          ],
+          "acceptance_criteria": [
+            "UV installed successfully (uv --version works)",
+            "Virtual environment created (uv venv)",
+            "Activation commands tested for WSL and Windows",
+            "Python 3.10+ verified in venv"
+          ],
+          "commands": [
+            "# WSL/Linux/Mac",
+            "curl -LsSf https://astral.sh/uv/install.sh | sh",
+            "uv venv",
+            "source .venv/bin/activate",
+            "",
+            "# Windows PowerShell",
+            "powershell -c \"irm https://astral.sh/uv/install.ps1 | iex\"",
+            "uv venv",
+            ".venv\\Scripts\\activate"
+          ]
+        },
+        {
+          "task_id": "2.3",
+          "name": "Define and Install Core Dependencies",
+          "description": "Create requirements.txt with exact versions, install using UV, verify all imports work",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["2.2"],
+          "deliverables": ["requirements.txt with pinned versions"],
+          "required_packages": {
+            "numpy": ">=1.24.0",
+            "pandas": ">=2.0.0",
+            "scikit-learn": ">=1.3.0",
+            "matplotlib": ">=3.7.0",
+            "pyyaml": ">=6.0",
+            "python-dotenv": ">=1.0.0"
+          },
+          "acceptance_criteria": [
+            "requirements.txt created with exact versions",
+            "All packages installed via: uv pip install -r requirements.txt",
+            "Can import numpy, pandas, sklearn, matplotlib, yaml",
+            "No version conflicts",
+            "Generate exact versions: uv pip freeze > requirements.txt"
+          ]
+        },
+        {
+          "task_id": "2.4",
+          "name": "Implement Ring Buffer Logging System",
+          "description": "Create src/utils/logger.py with RingBufferHandler class, configure log_config.json, implement setup_logger function",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["2.3"],
+          "deliverables": [
+            "src/utils/logger.py (≤150 lines)",
+            "logs/config/log_config.json"
+          ],
+          "acceptance_criteria": [
+            "RingBufferHandler class implemented",
+            "Max lines per file: configurable (default 1000)",
+            "Max log files: configurable (default 5)",
+            "Automatic rotation when limits reached",
+            "setup_logger() function works",
+            "print_log_status() function shows file count, lines, size",
+            "File ≤150 lines",
+            "Comprehensive docstrings"
+          ],
+          "reference": "PROJECT_GUIDELINES.md section 'Logging System - Ring Buffer'"
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_3",
+      "phase_name": "Data Management Implementation",
+      "description": "Implement data loading, validation, train-test split, optional preprocessing",
+      "duration_hours": 2.0,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "3.1",
+          "name": "Implement Data Loading and Validation",
+          "description": "Create load_iris_data() function in data_loader.py: load CSV, validate schema, convert labels, log statistics",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.0,
+          "status": "pending",
+          "dependencies": ["2.4"],
+          "deliverables": ["src/data_loader.py (partial, ≤150 lines total)"],
+          "functions_to_implement": [
+            "load_iris_data(file_path: str) -> Tuple[np.ndarray, np.ndarray]",
+            "validate_iris_data(X: np.ndarray, y: np.ndarray) -> bool",
+            "log_data_statistics(X: np.ndarray, y: np.ndarray, logger: Logger) -> None"
+          ],
+          "acceptance_criteria": [
+            "Loads Iris.csv from data/ directory",
+            "Returns X shape (150, 4), y shape (150,)",
+            "Converts species names to integers 0,1,2",
+            "Validates no missing values, no NaN",
+            "Logs: dataset shape, class distribution, feature names",
+            "Clear error messages for invalid data",
+            "Type hints on all functions",
+            "Comprehensive docstrings"
+          ]
+        },
+        {
+          "task_id": "3.2",
+          "name": "Implement Train-Test Split",
+          "description": "Create stratified_split() function: 80/20 split, stratified by class, fixed seed 42, validate proportions",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["3.1"],
+          "deliverables": ["stratified_split() function in data_loader.py"],
+          "functions_to_implement": [
+            "stratified_split(X, y, test_size=0.2, random_state=42) -> Tuple[X_train, X_test, y_train, y_test]"
+          ],
+          "acceptance_criteria": [
+            "Uses sklearn.model_selection.train_test_split with stratify=y",
+            "Training set: 120 samples (80%)",
+            "Test set: 30 samples (20%)",
+            "Class distribution maintained in both sets",
+            "Same split with random_state=42 across runs",
+            "Logs split statistics",
+            "Returns tuple of 4 arrays"
+          ]
+        },
+        {
+          "task_id": "3.3",
+          "name": "Implement Optional Feature Scaling",
+          "description": "Create normalize_features() function: standardize to mean=0 std=1, fit on train only, transform test with train parameters",
+          "priority": "P2_MEDIUM",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["3.2"],
+          "deliverables": ["normalize_features() function in data_loader.py"],
+          "functions_to_implement": [
+            "normalize_features(X_train, X_test, normalize: bool) -> Tuple[X_train_scaled, X_test_scaled, params]"
+          ],
+          "acceptance_criteria": [
+            "If normalize=True, scales features to mean≈0, std≈1",
+            "Calculates scaling params from training set only",
+            "Applies same transform to test set",
+            "Returns original data if normalize=False",
+            "Logs scaling parameters",
+            "No data leakage (test data not used for fitting)"
+          ],
+          "notes": "For Naive Bayes, scaling may not improve performance, but included for completeness"
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_4",
+      "phase_name": "NumPy Naive Bayes Implementation",
+      "description": "Implement Gaussian Naive Bayes from scratch using only NumPy, following mathematical formulas",
+      "duration_hours": 3.5,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "4.1",
+          "name": "Create GaussianNaiveBayesNumPy Class Structure",
+          "description": "Define class with __init__, fit, predict, predict_proba, score methods; set up parameter storage",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["3.3"],
+          "deliverables": ["src/naive_bayes_manual.py (≤150 lines total)"],
+          "class_structure": {
+            "class_name": "GaussianNaiveBayesNumPy",
+            "attributes": [
+              "epsilon: float (numerical stability)",
+              "classes_: np.ndarray (unique class labels)",
+              "class_prior_: np.ndarray (prior probabilities)",
+              "theta_: np.ndarray (feature means per class)",
+              "var_: np.ndarray (feature variances per class)"
+            ],
+            "methods": [
+              "__init__(epsilon=1e-9)",
+              "fit(X, y)",
+              "predict(X)",
+              "predict_proba(X)",
+              "score(X, y)",
+              "_gaussian_pdf(x, mean, var) [private helper]"
+            ]
+          },
+          "acceptance_criteria": [
+            "Class defined with proper structure",
+            "All methods have signatures (can pass None initially)",
+            "Type hints on all methods",
+            "Class-level docstring explaining Naive Bayes",
+            "All attributes initialized in __init__"
+          ]
+        },
+        {
+          "task_id": "4.2",
+          "name": "Implement Training Logic (fit method)",
+          "description": "Calculate priors, means, variances from training data; store parameters; add epsilon for stability; log learned parameters",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.5,
+          "status": "pending",
+          "dependencies": ["4.1"],
+          "deliverables": ["Complete fit() method"],
+          "algorithm": [
+            "1. Validate inputs (type, shape, no NaN)",
+            "2. Get unique classes: self.classes_ = np.unique(y)",
+            "3. For each class c:",
+            "   a. Calculate prior: P(c) = count(y==c) / len(y)",
+            "   b. Get class samples: X_c = X[y==c]",
+            "   c. Calculate mean: μ[c] = np.mean(X_c, axis=0)",
+            "   d. Calculate variance: σ²[c] = np.var(X_c, axis=0) + epsilon",
+            "4. Store: self.class_prior_, self.theta_ (means), self.var_",
+            "5. Log all learned parameters"
+          ],
+          "acceptance_criteria": [
+            "Calculates priors correctly (sum to 1.0)",
+            "Calculates means: shape (n_classes, n_features)",
+            "Calculates variances: shape (n_classes, n_features)",
+            "All variances > 0 (due to epsilon)",
+            "Uses only NumPy (no sklearn)",
+            "Comprehensive input validation",
+            "Logs parameters in human-readable format",
+            "Training completes in < 1 second"
+          ]
+        },
+        {
+          "task_id": "4.3",
+          "name": "Implement Gaussian PDF Helper",
+          "description": "Create _gaussian_pdf() method to calculate Gaussian probability density function",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["4.2"],
+          "deliverables": ["_gaussian_pdf() method"],
+          "formula": "P(x|μ,σ²) = (1/√(2πσ²)) × exp(-(x-μ)²/(2σ²))",
+          "acceptance_criteria": [
+            "Implements Gaussian PDF formula correctly",
+            "Returns positive values (probability densities)",
+            "Handles edge cases (variance=epsilon)",
+            "Efficient NumPy implementation",
+            "Well-documented with formula in docstring"
+          ]
+        },
+        {
+          "task_id": "4.4",
+          "name": "Implement Prediction Logic (predict methods)",
+          "description": "Implement predict() and predict_proba() using log probabilities, argmax for classification",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.0,
+          "status": "pending",
+          "dependencies": ["4.3"],
+          "deliverables": [
+            "predict() method",
+            "predict_proba() method",
+            "score() method"
+          ],
+          "algorithm": [
+            "For each test sample x:",
+            "  For each class c:",
+            "    log_posterior[c] = log(P(c))",
+            "    For each feature i:",
+            "      log_likelihood = log(gaussian_pdf(x[i], μ[c][i], σ²[c][i]))",
+            "      log_posterior[c] += log_likelihood",
+            "  prediction = argmax(log_posterior)"
+          ],
+          "acceptance_criteria": [
+            "predict() returns class labels (integers 0,1,2)",
+            "predict_proba() returns probabilities (normalized, sum to 1)",
+            "Uses log probabilities throughout (no underflow)",
+            "score() calculates accuracy correctly",
+            "Achieves ≥90% accuracy on Iris test set",
+            "Handles batch predictions (multiple samples)",
+            "Prediction completes in < 0.5 seconds",
+            "Logs first 3 predictions with details (educational)"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_5",
+      "phase_name": "Scikit-learn Naive Bayes Implementation",
+      "description": "Create wrapper around sklearn GaussianNB with identical interface and parameter extraction",
+      "duration_hours": 1.5,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "5.1",
+          "name": "Create GaussianNaiveBayesSKlearn Wrapper Class",
+          "description": "Define wrapper class around sklearn.naive_bayes.GaussianNB with same interface as NumPy version",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["4.4"],
+          "deliverables": ["src/naive_bayes_sklearn.py (≤150 lines)"],
+          "class_structure": {
+            "class_name": "GaussianNaiveBayesSKlearn",
+            "wraps": "sklearn.naive_bayes.GaussianNB",
+            "methods": [
+              "__init__(var_smoothing=1e-9)",
+              "fit(X, y)",
+              "predict(X)",
+              "predict_proba(X)",
+              "score(X, y)",
+              "get_params() -> dict"
+            ]
+          },
+          "acceptance_criteria": [
+            "Wraps sklearn.naive_bayes.GaussianNB",
+            "Same interface as GaussianNaiveBayesNumPy",
+            "var_smoothing parameter matches NumPy epsilon",
+            "Type hints on all methods",
+            "Comprehensive docstrings"
+          ]
+        },
+        {
+          "task_id": "5.2",
+          "name": "Implement fit and predict Methods",
+          "description": "Implement training and prediction by delegating to sklearn model, extract parameters after training",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["5.1"],
+          "deliverables": [
+            "fit() method with parameter extraction",
+            "predict(), predict_proba(), score() methods"
+          ],
+          "acceptance_criteria": [
+            "fit() trains sklearn model",
+            "Extracts class_prior_, theta_, var_ after training",
+            "Logs extracted parameters",
+            "predict() returns class labels",
+            "predict_proba() returns probabilities",
+            "score() returns accuracy",
+            "Achieves ≥90% accuracy on Iris test set"
+          ]
+        },
+        {
+          "task_id": "5.3",
+          "name": "Implement Parameter Extraction and Logging",
+          "description": "Create get_params() method to extract learned parameters, compare with NumPy implementation",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["5.2"],
+          "deliverables": ["get_params() method, parameter comparison logging"],
+          "acceptance_criteria": [
+            "get_params() returns dict with priors, means, variances",
+            "Parameters formatted same as NumPy version",
+            "Calculates differences: MAE for means, variances, priors",
+            "Logs comparison results",
+            "Differences should be small (< 0.01)"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_6",
+      "phase_name": "Evaluation and Comparison",
+      "description": "Implement comprehensive evaluation metrics, comparison functions, performance benchmarking",
+      "duration_hours": 2.5,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "6.1",
+          "name": "Implement Evaluation Metrics Functions",
+          "description": "Create functions in evaluator.py to calculate accuracy, precision, recall, F1, confusion matrix",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.0,
+          "status": "pending",
+          "dependencies": ["5.3"],
+          "deliverables": ["src/evaluator.py (≤150 lines)"],
+          "functions_to_implement": [
+            "calculate_metrics(y_true, y_pred) -> dict",
+            "calculate_confusion_matrix(y_true, y_pred) -> np.ndarray",
+            "generate_classification_report(y_true, y_pred) -> str",
+            "compare_predictions(y_true, pred_numpy, pred_sklearn) -> dict"
+          ],
+          "metrics_to_calculate": [
+            "Accuracy",
+            "Precision per class",
+            "Recall per class",
+            "F1-score per class",
+            "Macro-averaged metrics",
+            "Weighted-averaged metrics",
+            "Confusion matrix",
+            "Agreement rate between implementations"
+          ],
+          "acceptance_criteria": [
+            "All metrics calculated correctly",
+            "Uses sklearn.metrics for consistency",
+            "Returns structured dict with all metrics",
+            "Identifies prediction disagreements",
+            "Logs detailed comparison results",
+            "File ≤150 lines"
+          ]
+        },
+        {
+          "task_id": "6.2",
+          "name": "Implement Runtime Benchmarking",
+          "description": "Create benchmark functions to measure training and prediction time with statistical significance",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.75,
+          "status": "pending",
+          "dependencies": ["6.1"],
+          "deliverables": ["Benchmarking functions in evaluator.py"],
+          "functions_to_implement": [
+            "benchmark_model(model, X_train, y_train, X_test, n_runs=10) -> dict",
+            "calculate_speedup(time_numpy, time_sklearn) -> float"
+          ],
+          "acceptance_criteria": [
+            "Uses time.perf_counter() for accurate timing",
+            "Runs minimum 10 iterations per model",
+            "Measures training time separately from prediction time",
+            "Calculates mean, std, min, max",
+            "Calculates speedup factor",
+            "Returns dict with all timing statistics",
+            "Logs comparison results"
+          ]
+        },
+        {
+          "task_id": "6.3",
+          "name": "Implement Parameter Comparison Functions",
+          "description": "Create functions to compare learned parameters (priors, means, variances) between implementations",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.75,
+          "status": "pending",
+          "dependencies": ["6.2"],
+          "deliverables": ["Parameter comparison functions in evaluator.py"],
+          "functions_to_implement": [
+            "compare_parameters(params_numpy, params_sklearn) -> dict",
+            "calculate_parameter_differences(p1, p2) -> dict"
+          ],
+          "metrics_to_calculate": [
+            "Mean Absolute Error (MAE) for means",
+            "MAE for variances",
+            "MAE for priors",
+            "Maximum absolute error",
+            "Root Mean Squared Error (RMSE)"
+          ],
+          "acceptance_criteria": [
+            "Extracts parameters from both models",
+            "Calculates element-wise differences",
+            "Computes summary statistics",
+            "Returns structured dict",
+            "Logs comparison with interpretation",
+            "Differences should be small (< 0.01)"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_7",
+      "phase_name": "Visualization Implementation",
+      "description": "Implement all visualization functions for feature distributions, confusion matrices, comparison charts",
+      "duration_hours": 2.5,
+      "status": "pending",
+      "priority": "P1_HIGH",
+      "tasks": [
+        {
+          "task_id": "7.1",
+          "name": "Implement Feature Distribution Visualization",
+          "description": "Create plot_feature_distributions() to show histograms of all 4 features by class",
+          "priority": "P1_HIGH",
+          "estimated_hours": 1.0,
+          "status": "pending",
+          "dependencies": ["4.4"],
+          "deliverables": [
+            "src/visualizer.py (≤150 lines)",
+            "Feature distribution plots"
+          ],
+          "functions_to_implement": [
+            "plot_feature_distributions(X, y, feature_names, class_names, save_path)"
+          ],
+          "plot_requirements": [
+            "2x2 subplot grid (4 features)",
+            "3 overlaid histograms per subplot (3 classes)",
+            "Distinct colors: red (class 0), green (class 1), blue (class 2)",
+            "Semi-transparent (alpha=0.5)",
+            "Vertical dashed lines for class means",
+            "Proper axis labels and legends",
+            "Overall title",
+            "Save at 300 DPI"
+          ],
+          "acceptance_criteria": [
+            "All 4 features visualized",
+            "Clear visual separation between classes",
+            "Class means marked",
+            "High-resolution PNG saved to results/graphs/",
+            "Educational value: shows why Naive Bayes works"
+          ]
+        },
+        {
+          "task_id": "7.2",
+          "name": "Implement Confusion Matrix Visualization",
+          "description": "Create plot_confusion_matrices() for side-by-side comparison of NumPy vs sklearn confusion matrices",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.75,
+          "status": "pending",
+          "dependencies": ["6.1"],
+          "deliverables": ["Confusion matrix comparison plot"],
+          "functions_to_implement": [
+            "plot_confusion_matrices(cm_numpy, cm_sklearn, class_names, save_path)"
+          ],
+          "plot_requirements": [
+            "1x2 subplot (side-by-side)",
+            "Heatmap visualization",
+            "Annotated cells with counts",
+            "Color scale (lighter=lower, darker=higher)",
+            "Axis labels: Predicted vs True",
+            "Overall title: 'Confusion Matrix Comparison'",
+            "Save at 300 DPI"
+          ],
+          "acceptance_criteria": [
+            "Both confusion matrices displayed",
+            "Cell values clearly visible",
+            "Easy to compare visually",
+            "High-resolution PNG saved",
+            "Differences easily identifiable"
+          ]
+        },
+        {
+          "task_id": "7.3",
+          "name": "Implement Metric and Runtime Comparison Charts",
+          "description": "Create bar charts comparing metrics and runtime between implementations",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.75,
+          "status": "pending",
+          "dependencies": ["6.3"],
+          "deliverables": [
+            "Metric comparison bar chart",
+            "Runtime comparison bar chart"
+          ],
+          "functions_to_implement": [
+            "plot_metric_comparison(metrics_numpy, metrics_sklearn, save_path)",
+            "plot_runtime_comparison(times_numpy, times_sklearn, save_path)",
+            "plot_parameter_scatter(params_numpy, params_sklearn, save_path)"
+          ],
+          "plot_requirements": [
+            "Bar charts with side-by-side bars",
+            "Clear labels for each metric/timing",
+            "Different colors for NumPy vs sklearn",
+            "Error bars for timing (std)",
+            "Y-axis scales appropriate for data",
+            "Legends identifying implementations",
+            "Save all at 300 DPI"
+          ],
+          "acceptance_criteria": [
+            "Minimum 3 different comparison visualizations",
+            "All graphs professional quality",
+            "Easy to interpret differences",
+            "High-resolution PNGs saved",
+            "Colorblind-friendly palette"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_8",
+      "phase_name": "Main Pipeline and Configuration",
+      "description": "Implement main.py orchestration, configuration management, experiment runner",
+      "duration_hours": 2.0,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "8.1",
+          "name": "Create Configuration System",
+          "description": "Implement YAML configuration loading, validation, default values",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["2.4"],
+          "deliverables": [
+            "config/settings.yaml",
+            "config/log_config.json",
+            "config/experiments/*.yaml"
+          ],
+          "configuration_parameters": {
+            "data": {
+              "path": "data/Iris.csv",
+              "test_size": 0.2,
+              "random_seed": 42,
+              "normalize": false
+            },
+            "models": {
+              "numpy": {"epsilon": 1e-9},
+              "sklearn": {"var_smoothing": 1e-9}
+            },
+            "evaluation": {
+              "benchmark_runs": 10,
+              "metrics": ["accuracy", "precision", "recall", "f1"]
+            },
+            "visualization": {
+              "dpi": 300,
+              "style": "seaborn-v0_8"
+            },
+            "output": {
+              "results_dir": "results",
+              "save_predictions": true
+            }
+          },
+          "acceptance_criteria": [
+            "settings.yaml created with all parameters",
+            "log_config.json configured for ring buffer",
+            "3 experiment configs created",
+            "Config loading function implemented",
+            "Config validation implemented",
+            "Sensible defaults provided"
+          ]
+        },
+        {
+          "task_id": "8.2",
+          "name": "Implement Main Pipeline Orchestration",
+          "description": "Create main.py with 10-step pipeline orchestrating entire workflow",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.5,
+          "status": "pending",
+          "dependencies": ["7.3", "8.1"],
+          "deliverables": ["main.py (≤150 lines)"],
+          "pipeline_steps": [
+            "1. Load configuration (settings.yaml)",
+            "2. Setup logging (ring buffer)",
+            "3. Load and split data",
+            "4. Train NumPy model",
+            "5. Train sklearn model",
+            "6. Generate predictions (both models)",
+            "7. Calculate all metrics",
+            "8. Run performance benchmarks",
+            "9. Generate visualizations",
+            "10. Save all results",
+            "11. Print summary report"
+          ],
+          "command_line_args": [
+            "--config: path to config file (default: config/settings.yaml)",
+            "--run-name: experiment run name (default: timestamp)",
+            "--verbose: enable detailed logging"
+          ],
+          "acceptance_criteria": [
+            "Single command execution: python main.py",
+            "Clear progress indicators for each step",
+            "Error handling at all steps",
+            "All results saved to results/",
+            "Summary printed at end",
+            "Log status displayed",
+            "File ≤150 lines",
+            "Complete pipeline < 15 seconds"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_9",
+      "phase_name": "Experiments and Results Generation",
+      "description": "Run minimum 3 experiments, generate all results, create summary tables",
+      "duration_hours": 1.5,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "9.1",
+          "name": "Run Experiment 1: Baseline",
+          "description": "Run with default config: 80/20 split, seed=42, no scaling",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["8.2"],
+          "deliverables": [
+            "results/examples/run_1/config.yaml",
+            "results/examples/run_1/metrics.json",
+            "results/examples/run_1/predictions.csv",
+            "results/examples/run_1/visualizations/*.png"
+          ],
+          "experiment_config": {
+            "name": "baseline",
+            "test_size": 0.2,
+            "random_seed": 42,
+            "normalize": false
+          },
+          "acceptance_criteria": [
+            "Both models achieve ≥90% accuracy",
+            "Agreement rate ≥95%",
+            "All metrics saved",
+            "All visualizations generated",
+            "Results documented"
+          ]
+        },
+        {
+          "task_id": "9.2",
+          "name": "Run Experiment 2: Different Split",
+          "description": "Run with 70/30 split to see effect on metrics variance",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["9.1"],
+          "deliverables": [
+            "results/examples/run_2/ (same structure as run_1)"
+          ],
+          "experiment_config": {
+            "name": "different_split",
+            "test_size": 0.3,
+            "random_seed": 42,
+            "normalize": false
+          },
+          "acceptance_criteria": [
+            "Experiment completes successfully",
+            "Results saved",
+            "Can compare with baseline"
+          ]
+        },
+        {
+          "task_id": "9.3",
+          "name": "Run Experiment 3: With Feature Scaling",
+          "description": "Run with feature scaling to demonstrate effect (or lack thereof) for Naive Bayes",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["9.2"],
+          "deliverables": [
+            "results/examples/run_3/ (same structure)",
+            "results/tables/metrics_summary.csv (all runs)",
+            "results/tables/runtime_summary.csv"
+          ],
+          "experiment_config": {
+            "name": "with_scaling",
+            "test_size": 0.2,
+            "random_seed": 42,
+            "normalize": true
+          },
+          "acceptance_criteria": [
+            "Experiment completes successfully",
+            "Results saved",
+            "Summary tables generated comparing all 3 runs",
+            "Analysis written explaining configuration effects"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_10",
+      "phase_name": "Documentation and README",
+      "description": "Write comprehensive README.md serving as both documentation and learning guide",
+      "duration_hours": 3.0,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "10.1",
+          "name": "Write README: Introduction and Overview",
+          "description": "Write project title, abstract, features, applications, dataset description",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["9.3"],
+          "deliverables": ["README.md (partial)"],
+          "sections_to_write": [
+            "Project title with badges",
+            "Abstract (2-3 sentences)",
+            "Features list",
+            "Applications & Use Cases (minimum 3)",
+            "Dataset description"
+          ],
+          "acceptance_criteria": [
+            "Clear, compelling project description",
+            "Real-world use cases described",
+            "Dataset section complete with feature descriptions"
+          ]
+        },
+        {
+          "task_id": "10.2",
+          "name": "Write README: Mathematical Foundations",
+          "description": "Explain Bayes' theorem, Gaussian distribution, Naive assumption at 15-year-old level",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.0,
+          "status": "pending",
+          "dependencies": ["10.1"],
+          "deliverables": ["Mathematical foundations section"],
+          "sections_to_write": [
+            "Bayes' Theorem (with example)",
+            "Gaussian Distribution (with analogy)",
+            "Naive Independence Assumption (why it works)",
+            "Numerical Stability (log probabilities)",
+            "Example calculation walkthrough"
+          ],
+          "acceptance_criteria": [
+            "Explanations accessible to 15-year-olds",
+            "Real-world analogies provided",
+            "Formulas explained in plain English",
+            "Example calculation shows full process"
+          ]
+        },
+        {
+          "task_id": "10.3",
+          "name": "Write README: Installation and Usage",
+          "description": "Write environment setup, installation instructions, how to run, configuration guide",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["10.2"],
+          "deliverables": ["Installation and usage sections"],
+          "sections_to_write": [
+            "System Requirements",
+            "Virtual Environment Setup (UV)",
+            "Installation Instructions",
+            "How to Run",
+            "Configuration Guide",
+            "Expected Output"
+          ],
+          "acceptance_criteria": [
+            "Instructions for both WSL and Windows",
+            "Step-by-step UV setup",
+            "Clear commands with expected output",
+            "Configuration parameters documented"
+          ]
+        },
+        {
+          "task_id": "10.4",
+          "name": "Write README: Results and Analysis",
+          "description": "Document all 3 experiment runs with visualizations, metrics, analysis",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 1.0,
+          "status": "pending",
+          "dependencies": ["10.3"],
+          "deliverables": ["Results and analysis sections"],
+          "sections_to_write": [
+            "Project Structure",
+            "Code Files Summary (table with line counts)",
+            "Results & Examples (all 3 runs)",
+            "Results Comparison",
+            "Analysis",
+            "What I Learned",
+            "Troubleshooting"
+          ],
+          "acceptance_criteria": [
+            "All visualizations embedded",
+            "Each result explained thoroughly",
+            "Metrics comparison table included",
+            "Analysis interprets findings",
+            "Code files table with line counts",
+            "Maximum file ≤150 lines verified"
+          ]
+        }
+      ]
+    },
+    {
+      "phase_id": "phase_11",
+      "phase_name": "Testing, Quality Assurance, and Final Review",
+      "description": "Verify all requirements met, test on fresh environment, final quality checks",
+      "duration_hours": 2.0,
+      "status": "pending",
+      "priority": "P0_CRITICAL",
+      "tasks": [
+        {
+          "task_id": "11.1",
+          "name": "Code Quality Review",
+          "description": "Verify all files ≤150 lines, all functions have type hints and docstrings, all folders have __init__.py",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["10.4"],
+          "deliverables": ["Quality assurance report"],
+          "checks": [
+            "All Python files ≤150 lines",
+            "All functions have type hints",
+            "All functions have docstrings",
+            "All directories have __init__.py",
+            "No hardcoded absolute paths",
+            "No hardcoded secrets",
+            ".gitignore properly configured",
+            "requirements.txt has exact versions"
+          ],
+          "acceptance_criteria": [
+            "All code quality checks pass",
+            "Line count violations fixed",
+            "Missing docstrings added",
+            "Type hints complete",
+            "All issues resolved"
+          ]
+        },
+        {
+          "task_id": "11.2",
+          "name": "Test on Fresh Virtual Environment",
+          "description": "Create fresh UV venv, install dependencies, run full pipeline, verify reproducibility",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["11.1"],
+          "deliverables": ["Fresh environment test report"],
+          "test_steps": [
+            "1. Delete .venv/ directory",
+            "2. Create new: uv venv",
+            "3. Activate venv",
+            "4. Install: uv pip install -r requirements.txt",
+            "5. Run: python main.py",
+            "6. Verify all outputs generated",
+            "7. Compare results with previous runs"
+          ],
+          "acceptance_criteria": [
+            "Installation succeeds with no errors",
+            "Pipeline runs successfully",
+            "All results generated",
+            "Results match previous runs (reproducible)",
+            "No missing dependencies"
+          ]
+        },
+        {
+          "task_id": "11.3",
+          "name": "Success Criteria Verification",
+          "description": "Verify all success criteria from PRD are met, check against checklist",
+          "priority": "P0_CRITICAL",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["11.2"],
+          "deliverables": ["Success criteria checklist (completed)"],
+          "criteria_to_verify": [
+            "Both implementations ≥90% accuracy",
+            "Agreement rate ≥95%",
+            "All files ≤150 lines",
+            "Minimum 5 visualizations",
+            "Minimum 3 experiment runs",
+            "100% reproducibility",
+            "README comprehensive",
+            "Mathematical explanations clear",
+            "All code documented",
+            "Ring buffer logging working",
+            "Full pipeline < 15 seconds"
+          ],
+          "acceptance_criteria": [
+            "All functional success criteria met",
+            "All quality metrics met",
+            "All performance benchmarks met",
+            "All documentation complete",
+            "Project ready for submission"
+          ]
+        },
+        {
+          "task_id": "11.4",
+          "name": "Final Polish and Cleanup",
+          "description": "Clear cache, format code, update README if needed, prepare for GitHub upload",
+          "priority": "P1_HIGH",
+          "estimated_hours": 0.5,
+          "status": "pending",
+          "dependencies": ["11.3"],
+          "deliverables": ["Polished, submission-ready project"],
+          "cleanup_tasks": [
+            "Clear all __pycache__ directories",
+            "Remove any temporary files",
+            "Format code with black (optional)",
+            "Verify .gitignore catches all temp files",
+            "Review README one last time",
+            "Verify all file paths in README are correct",
+            "Test all embedded images load",
+            "Spell check all documentation"
+          ],
+          "acceptance_criteria": [
+            "No __pycache__ directories",
+            "No temporary files",
+            "Code formatted consistently",
+            "README polished and professional",
+            "All links and paths work",
+            "Ready for GitHub push"
+          ]
+        }
+      ]
+    }
+  ],
+  "file_structure": {
+    "description": "Complete project directory structure following PROJECT_GUIDELINES",
+    "root_files": [
+      "README.md",
+      "main.py",
+      "requirements.txt",
+      ".gitignore",
+      ".env.example"
+    ],
+    "directories": {
+      "venv/": {
+        "purpose": "Virtual environment indicator",
+        "files": [".gitkeep"]
+      },
+      "src/": {
+        "purpose": "All source code",
+        "files": [
+          "__init__.py",
+          "naive_bayes_manual.py (≤150 lines)",
+          "naive_bayes_sklearn.py (≤150 lines)",
+          "data_loader.py (≤150 lines)",
+          "evaluator.py (≤150 lines)",
+          "visualizer.py (≤150 lines)"
+        ],
+        "subdirectories": {
+          "utils/": {
+            "files": [
+              "__init__.py",
+              "logger.py (≤150 lines)",
+              "validators.py (≤150 lines)",
+              "helpers.py (≤150 lines)",
+              "paths.py (≤150 lines)"
+            ]
+          }
+        }
+      },
+      "docs/": {
+        "purpose": "Documentation",
+        "files": [
+          "PRD.md",
+          "tasks.json"
+        ]
+      },
+      "data/": {
+        "purpose": "Dataset storage",
+        "files": [
+          "Iris.csv",
+          "README.md"
+        ]
+      },
+      "results/": {
+        "purpose": "All output files",
+        "subdirectories": {
+          "examples/": {
+            "purpose": "Experiment results",
+            "subdirectories": {
+              "run_1/": ["config.yaml", "metrics.json", "predictions.csv", "visualizations/"],
+              "run_2/": ["config.yaml", "metrics.json", "predictions.csv"],
+              "run_3/": ["config.yaml", "metrics.json", "predictions.csv"]
+            }
+          },
+          "graphs/": {
+            "purpose": "Visualization outputs",
+            "files": [
+              "feature_distributions_numpy.png",
+              "feature_distributions_sklearn.png",
+              "confusion_matrix_comparison.png",
+              "metric_comparison.png",
+              "runtime_comparison.png",
+              "parameter_scatter.png"
+            ]
+          },
+          "tables/": {
+            "purpose": "Summary tables",
+            "files": [
+              "metrics_summary.csv",
+              "runtime_summary.csv",
+              "parameter_comparison.csv"
+            ]
+          }
+        }
+      },
+      "logs/": {
+        "purpose": "Logging output (ring buffer)",
+        "files": [".gitkeep"],
+        "subdirectories": {
+          "config/": {
+            "files": ["log_config.json"]
+          }
+        }
+      },
+      "config/": {
+        "purpose": "Configuration files",
+        "files": [
+          "settings.yaml",
+          "log_config.json"
+        ],
+        "subdirectories": {
+          "experiments/": {
+            "files": [
+              "baseline.yaml",
+              "different_split.yaml",
+              "with_scaling.yaml"
+            ]
+          }
+        }
+      },
+      "tests/": {
+        "purpose": "Unit tests (optional)",
+        "files": [
+          "__init__.py",
+          "test_naive_bayes_manual.py",
+          "test_naive_bayes_sklearn.py",
+          "test_data_loader.py"
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_phases": 11,
+    "total_tasks": 42,
+    "total_estimated_hours": 18.5,
+    "critical_path": [
+      "phase_1 → phase_2 → phase_3 → phase_4 → phase_5 → phase_6 → phase_7 → phase_8 → phase_9 → phase_10 → phase_11"
+    ],
+    "key_milestones": [
+      "Phase 1 approval (MANDATORY GATE)",
+      "NumPy implementation complete and tested (Task 4.4)",
+      "Sklearn implementation complete (Task 5.3)",
+      "All evaluations and comparisons done (Task 6.3)",
+      "All visualizations generated (Task 7.3)",
+      "Main pipeline operational (Task 8.2)",
+      "All 3 experiments completed (Task 9.3)",
+      "README complete (Task 10.4)",
+      "Final QA passed (Task 11.4)"
+    ],
+    "deliverables_count": {
+      "code_files": 11,
+      "config_files": 5,
+      "documentation_files": 3,
+      "visualization_files": 6,
+      "result_files": 9,
+      "test_files": 3
+    },
+    "success_metrics": {
+      "model_accuracy": "≥90% for both implementations",
+      "agreement_rate": "≥95%",
+      "file_size_limit": "≤150 lines per file",
+      "visualization_count": "≥5 different graphs",
+      "experiment_runs": "≥3 documented runs",
+      "pipeline_execution_time": "<15 seconds",
+      "reproducibility": "100% with fixed seed"
+    }
+  },
+  "notes": [
+    "⚠️ Phase 1 MUST be completed and approved before starting Phase 2",
+    "All Python files must be ≤150 lines (strictly enforced)",
+    "Every directory with Python code must have __init__.py",
+    "Use UV for virtual environment management (not pip or conda)",
+    "All paths must be relative (no hardcoded absolute paths)",
+    "Ring buffer logging is mandatory",
+    "Minimum 3 experiment runs required",
+    "All visualizations must be 300 DPI PNG",
+    "README must explain math at 15-year-old level",
+    "100% reproducibility required (fixed random seeds)"
+  ]
+}

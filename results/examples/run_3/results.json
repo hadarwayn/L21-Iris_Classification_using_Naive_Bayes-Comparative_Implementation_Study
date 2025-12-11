@@ -1,0 +1,64 @@
+{
+  "experiment": {
+    "name": "with_scaling",
+    "description": "Experiment with feature normalization (z-score)",
+    "run_id": 3
+  },
+  "metrics": {
+    "numpy": {
+      "accuracy": 0.9666666666666667,
+      "precision": 0.9696969696969696,
+      "recall": 0.9666666666666667,
+      "f1_score": 0.9665831244778613
+    },
+    "sklearn": {
+      "accuracy": 0.9666666666666667,
+      "precision": 0.9696969696969696,
+      "recall": 0.9666666666666667,
+      "f1_score": 0.9665831244778613
+    }
+  },
+  "timing": {
+    "numpy": {
+      "train_time_mean": 0.00027348000003257766,
+      "train_time_std": 0.00013175020874914414,
+      "predict_time_mean": 4.511000151978806e-05,
+      "predict_time_std": 8.211145370404252e-06,
+      "train_time_formatted": "273.48 \u03bcs",
+      "predict_time_formatted": "45.11 \u03bcs"
+    },
+    "sklearn": {
+      "train_time_mean": 0.00066612999944482,
+      "train_time_std": 8.099334620968039e-05,
+      "predict_time_mean": 0.00010757999843917787,
+      "predict_time_std": 2.1991262596255335e-05,
+      "train_time_formatted": "666.13 \u03bcs",
+      "predict_time_formatted": "107.58 \u03bcs"
+    }
+  },
+  "prediction_comparison": {
+    "agreement_count": 30,
+    "disagreement_count": 0,
+    "agreement_rate": 1.0,
+    "total_predictions": 30,
+    "disagreement_indices": []
+  },
+  "parameter_comparison": {
+    "prior_max_diff": 0.0,
+    "prior_mean_diff": 0.0,
+    "theta_max_diff": 0.0,
+    "theta_mean_diff": 0.0,
+    "var_max_diff": 1.0000000272292198e-09,
+    "var_mean_diff": 9.999999971606794e-10
+  },
+  "data_info": {
+    "train_size": 120,
+    "test_size": 30,
+    "n_features": 4,
+    "classes": [
+      "Iris-setosa",
+      "Iris-versicolor",
+      "Iris-virginica"
+    ]
+  }
+}

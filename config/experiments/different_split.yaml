@@ -1,0 +1,26 @@
+# Experiment 2: Different Train-Test Split
+# Testing with 70-30 split to evaluate generalization
+
+experiment:
+  name: "different_split"
+  description: "Experiment with 70-30 train-test split"
+  run_id: 2
+
+data:
+  path: "data/Iris.csv"
+  test_size: 0.3
+  random_seed: 42
+  stratify: true
+  normalize: false
+
+models:
+  numpy:
+    epsilon: 1.0e-9
+  sklearn:
+    var_smoothing: 1.0e-9
+
+evaluation:
+  benchmark_runs: 10
+
+output:
+  results_subdir: "results/examples/run_2"

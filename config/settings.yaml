@@ -1,0 +1,67 @@
+# L21 - Iris Naive Bayes Configuration
+# Main settings file for the project
+
+project:
+  name: "L21 - Iris Classification using Naive Bayes"
+  version: "1.0.0"
+  description: "Comparative study of manual NumPy and scikit-learn implementations"
+
+data:
+  path: "data/Iris.csv"
+  test_size: 0.2
+  random_seed: 42
+  stratify: true
+  normalize: false
+  validation:
+    check_missing: true
+    check_duplicates: true
+    min_samples_per_class: 10
+
+models:
+  numpy:
+    epsilon: 1.0e-9  # Variance smoothing for numerical stability
+    use_log_probs: true
+  sklearn:
+    var_smoothing: 1.0e-9  # Must match numpy epsilon for fair comparison
+    priors: null  # Learn from data
+
+evaluation:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+  average_method: "weighted"  # For multiclass metrics
+  benchmark_runs: 10  # Number of times to run for runtime measurement
+  compare_parameters: true
+  compare_predictions: true
+
+visualization:
+  dpi: 300
+  figsize: [10, 8]
+  style: "seaborn-v0_8-whitegrid"
+  save_format: "png"
+  plots:
+    - confusion_matrix_numpy
+    - confusion_matrix_sklearn
+    - feature_distributions
+    - class_distributions
+    - runtime_comparison
+    - metrics_comparison
+    - parameter_heatmaps
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  ring_buffer:
+    enabled: true
+    max_lines: 10000
+    max_files: 5
+  log_dir: "logs"
+
+output:
+  results_dir: "results"
+  save_models: false
+  save_predictions: true
+  save_metrics: true
+  save_plots: true

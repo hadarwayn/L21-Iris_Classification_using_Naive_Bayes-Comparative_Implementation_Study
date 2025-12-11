@@ -1,0 +1,26 @@
+# Experiment 1: Baseline Configuration
+# Standard 80-20 train-test split with fixed seed
+
+experiment:
+  name: "baseline"
+  description: "Baseline experiment with standard 80-20 split"
+  run_id: 1
+
+data:
+  path: "data/Iris.csv"
+  test_size: 0.2
+  random_seed: 42
+  stratify: true
+  normalize: false
+
+models:
+  numpy:
+    epsilon: 1.0e-9
+  sklearn:
+    var_smoothing: 1.0e-9
+
+evaluation:
+  benchmark_runs: 10
+
+output:
+  results_subdir: "results/examples/run_1"
